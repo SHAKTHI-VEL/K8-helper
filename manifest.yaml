@@ -18,15 +18,41 @@ rules:
   resources: ["rollouts/status"]
   verbs: ["get", "patch", "update"]
 
-# --- Namespace discovery ---
+# --- Core Kubernetes Resources ---
 - apiGroups: [""]
   resources: ["namespaces"]
   verbs: ["get", "list"]
 
-# --- 🔥 Metrics Server access (REQUIRED) ---
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch"]
+
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "list", "watch"]
+
+# --- Apps Resources (Deployments) ---
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
+
+# --- Networking Resources (Ingress) ---
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+
+# --- Metrics Server access (REQUIRED for metrics) ---
 - apiGroups: ["metrics.k8s.io"]
   resources: ["nodes", "pods"]
-  verbs: ["get", "list", "watch"]
+  verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -59,7 +85,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: shakthi28/k8-web-ui:kai
+        image: shakthi28/k8-web-ui:tyson
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
