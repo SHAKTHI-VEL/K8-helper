@@ -59,7 +59,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: shakthi28/k8-web-ui:ninja
+        image: shakthi28/k8-web-ui:kai
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
