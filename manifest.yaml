@@ -4,12 +4,6 @@ metadata:
   name: argo-rollout-promoter
   namespace: default
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: argo-rollouts-dashboard
-  namespace: argo-rollouts
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -26,21 +20,6 @@ rules:
   verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: argo-rollouts-dashboard-role
-rules:
-- apiGroups: ["argoproj.io"]
-  resources: ["rollouts", "rollouts/status", "analysisruns", "experiments"]
-  verbs: ["get", "list", "watch", "patch", "update"]
-- apiGroups: [""]
-  resources: ["services", "replicasets", "pods", "events"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources: ["replicasets"]
-  verbs: ["get", "list", "watch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: argo-rollout-promoter
@@ -51,19 +30,6 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: argo-rollout-promoter
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: argo-rollouts-dashboard-binding
-subjects:
-- kind: ServiceAccount
-  name: argo-rollouts-dashboard
-  namespace: argo-rollouts
-roleRef:
-  kind: ClusterRole
-  name: argo-rollouts-dashboard-role
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
@@ -84,7 +50,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: k8-helper:999
+        image: shakthi28/k8-helper:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -125,4 +91,5 @@ spec:
     targetPort: 3000
     protocol: TCP
     name: http
-  type: ClusterIP
+    nodePort: 31001 
+  type: NodePort
