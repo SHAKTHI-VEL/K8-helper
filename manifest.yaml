@@ -13,42 +13,33 @@ rules:
 - apiGroups: ["argoproj.io"]
   resources: ["rollouts"]
   verbs: ["get", "list", "watch", "patch", "update"]
-
 - apiGroups: ["argoproj.io"]
   resources: ["rollouts/status"]
   verbs: ["get", "patch", "update"]
-
 # --- Core Kubernetes Resources ---
 - apiGroups: [""]
   resources: ["namespaces"]
   verbs: ["get", "list"]
-
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "list", "watch"]
-
 - apiGroups: [""]
   resources: ["nodes"]
   verbs: ["get", "list", "watch"]
-
 - apiGroups: [""]
   resources: ["services"]
   verbs: ["get", "list", "watch"]
-
 - apiGroups: [""]
   resources: ["events"]
   verbs: ["get", "list", "watch"]
-
 # --- Apps Resources (Deployments) ---
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["get", "list", "watch"]
-
 # --- Networking Resources (Ingress) ---
 - apiGroups: ["networking.k8s.io"]
   resources: ["ingresses"]
   verbs: ["get", "list", "watch"]
-
 # --- Metrics Server access (REQUIRED for metrics) ---
 - apiGroups: ["metrics.k8s.io"]
   resources: ["nodes", "pods"]
@@ -65,6 +56,35 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: argo-rollout-promoter
+  apiGroup: rbac.authorization.k8s.io
+---
+# RBAC for Argo Rollouts Dashboard
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-rollouts-dashboard-clusterrole
+rules:
+- apiGroups: ["argoproj.io"]
+  resources: ["rollouts", "rollouts/status"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods", "services", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-rollouts-dashboard-clusterrolebinding
+subjects:
+- kind: ServiceAccount
+  name: argo-rollouts-dashboard
+  namespace: argo-rollouts
+roleRef:
+  kind: ClusterRole
+  name: argo-rollouts-dashboard-clusterrole
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
