@@ -32,6 +32,31 @@ roleRef:
   name: argo-rollout-promoter
   apiGroup: rbac.authorization.k8s.io
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-rollouts-dashboard-role
+rules:
+- apiGroups: ["argoproj.io"]
+  resources: ["rollouts", "rollouts/status"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["services", "replicasets", "pods"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-rollouts-dashboard-binding
+subjects:
+- kind: ServiceAccount
+  name: argo-rollouts-dashboard
+  namespace: argo-rollouts
+roleRef:
+  kind: ClusterRole
+  name: argo-rollouts-dashboard-role
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
