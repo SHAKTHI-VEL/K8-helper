@@ -87,7 +87,7 @@ spec:
         image: shakthi28/controlpanel:alpha
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3000
+        - containerPort: 80
           name: http
         env:
         - name: NODE_ENV
@@ -110,7 +110,7 @@ spec:
     app: argo-rollout-promoter
   ports:
   - port: 80
-    targetPort: 3000
+    targetPort: 80
     protocol: TCP
     name: http
     nodePort: 30001
