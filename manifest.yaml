@@ -84,7 +84,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: shakthi28/k8-web-ui:tyson
+        image: shakthi28/controlpanel:alpha
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -99,18 +99,6 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
