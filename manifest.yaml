@@ -84,7 +84,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: shakthi28/k8s-control-tower:alpha
+        image: k8s-control-tower:kai
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -92,6 +92,10 @@ spec:
         env:
         - name: NODE_ENV
           value: production
+        - name: NAMESPACE
+          value: ci-cd-ns
+        - name: ROLLOUT_NAME
+          value: automated-deployment-app
         resources:
           requests:
             memory: "128Mi"
