@@ -84,7 +84,7 @@ spec:
       serviceAccountName: argo-rollout-promoter
       containers:
       - name: web
-        image: shakthi28/k8s-control-tower:pat 
+        image: shakthi28/k8s-control-tower:apple
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
